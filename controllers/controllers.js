@@ -51,6 +51,19 @@ const addToCart = async (req, res) => {
   }
 };
 
+const deleteCartItem = async (req, res) => {
+  const reqId = req.params.id;
+  const user = req.query;
+  const options = { _id: new ObjectId(reqId), useremail: user.email };
+  try {
+    const item = await cartCollection.deleteOne(options);
+    res.send(item);
+  } catch (e) {
+    console.log(e);
+    res.send(errorResponse());
+  }
+};
+
 const getCartData = async (req, res) => {
   const user = req.query;
   const options = { useremail: user.email };
@@ -69,4 +82,5 @@ module.exports = {
   getReviews,
   addToCart,
   getCartData,
+  deleteCartItem,
 };

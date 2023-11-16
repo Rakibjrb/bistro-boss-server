@@ -7,6 +7,7 @@ const {
   getReviews,
   addToCart,
   getCartData,
+  deleteCartItem,
 } = require("./controllers/controllers");
 const { client } = require("./db/db");
 
@@ -14,7 +15,6 @@ const { client } = require("./db/db");
 app.use(express.json());
 app.use(cors());
 
-//server all get routes
 app.get("/", serverMainRoute);
 
 const checkdb = async () => {
@@ -24,9 +24,16 @@ const checkdb = async () => {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+    //server all get routes
     app.get("/api/v1/menus/:id", getMenus);
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", getCartData);
+
+    //post routes
+    app.post("/api/v1/cart", addToCart);
+
+    //all delete routes
+    app.delete("/api/v1/cart/:id", deleteCartItem);
   } catch (e) {
     console.log(e);
   } finally {
@@ -35,8 +42,5 @@ const checkdb = async () => {
 };
 
 checkdb();
-
-//post routes
-app.post("/api/v1/cart", addToCart);
 
 module.exports = app;
