@@ -12,6 +12,7 @@ const client = new MongoClient(uri, {
 
 const menusCollection = client.db("bistroDB").collection("menus");
 const reviewsCollection = client.db("bistroDB").collection("reviews");
+const cartCollection = client.db("bistroDB").collection("cart");
 
 const connectdb = () => client.connect();
 const closedb = () => client.close();
@@ -36,4 +37,5 @@ module.exports = {
   closedb,
   menusCollection,
   reviewsCollection,
+  cartCollection,
 };

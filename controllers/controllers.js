@@ -4,6 +4,7 @@ const {
   closedb,
   ObjectId,
   reviewsCollection,
+  cartCollection,
 } = require("../db/db");
 const { errorResponse } = require("../utilities/utilities");
 
@@ -42,7 +43,23 @@ const getReviews = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.send(errorResponse());
+  } finally {
+    await closedb();
   }
 };
 
-module.exports = { serverMainRoute, getMenus, getReviews };
+const addToCart = async (req, res) => {
+  const data = req.body;
+  try {
+    await connectdb();
+    const reviews = await cartCollection.insertOne(data);
+    res.send(reviews);
+  } catch (e) {
+    console.log(e);
+    res.send(errorResponse());
+  } finally {
+    await closedb();
+  }
+};
+
+module.exports = { serverMainRoute, getMenus, getReviews, addToCart };
