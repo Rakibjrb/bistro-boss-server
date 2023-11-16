@@ -14,27 +14,9 @@ const menusCollection = client.db("bistroDB").collection("menus");
 const reviewsCollection = client.db("bistroDB").collection("reviews");
 const cartCollection = client.db("bistroDB").collection("cart");
 
-const connectdb = () => client.connect();
-const closedb = () => client.close();
-
-const checkdb = async () => {
-  try {
-    connectdb();
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    closedb();
-  }
-};
-
 module.exports = {
-  checkdb,
   client,
   ObjectId,
-  connectdb,
-  closedb,
   menusCollection,
   reviewsCollection,
   cartCollection,

@@ -1,7 +1,5 @@
 const {
   menusCollection,
-  connectdb,
-  closedb,
   ObjectId,
   reviewsCollection,
   cartCollection,
@@ -18,7 +16,6 @@ const serverMainRoute = (req, res) => {
 const getMenus = async (req, res) => {
   const reqId = req.params.id;
   try {
-    await connectdb();
     if (reqId === "all") {
       const menus = await menusCollection.find({}).toArray();
       res.send(menus);
@@ -30,36 +27,46 @@ const getMenus = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.send(errorResponse());
-  } finally {
-    await closedb();
   }
 };
 
 const getReviews = async (req, res) => {
   try {
-    await connectdb();
     const reviews = await reviewsCollection.find({}).toArray();
     res.send(reviews);
   } catch (e) {
     console.log(e);
     res.send(errorResponse());
-  } finally {
-    await closedb();
   }
 };
 
 const addToCart = async (req, res) => {
   const data = req.body;
   try {
-    await connectdb();
-    const reviews = await cartCollection.insertOne(data);
-    res.send(reviews);
+    const item = await cartCollection.insertOne(data);
+    res.send(item);
   } catch (e) {
     console.log(e);
     res.send(errorResponse());
-  } finally {
-    await closedb();
   }
 };
 
-module.exports = { serverMainRoute, getMenus, getReviews, addToCart };
+const getCartData = async (req, res) => {
+  const user = req.query;
+  console.log(user);
+  try {
+    const cartItems = await cartCollection.find().toArray();
+    res.send(cartItems);
+  } catch (e) {
+    console.log(e);
+    res.send(errorResponse());
+  }
+};
+
+module.exports = {
+  serverMainRoute,
+  getMenus,
+  getReviews,
+  addToCart,
+  getCartData,
+};
