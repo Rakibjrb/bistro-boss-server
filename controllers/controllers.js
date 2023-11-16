@@ -53,9 +53,9 @@ const addToCart = async (req, res) => {
 
 const getCartData = async (req, res) => {
   const user = req.query;
-  console.log(user);
+  const options = { useremail: user.email };
   try {
-    const cartItems = await cartCollection.find().toArray();
+    const cartItems = await cartCollection.find(options).toArray();
     res.send(cartItems);
   } catch (e) {
     console.log(e);
