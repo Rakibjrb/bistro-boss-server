@@ -10,6 +10,8 @@ const {
   deleteCartItem,
   saveNewUser,
   getUsers,
+  deleteUser,
+  makeAdmin,
 } = require("./controllers/controllers");
 const { client } = require("./db/db");
 
@@ -36,8 +38,12 @@ const checkdb = async () => {
     app.post("/api/v1/cart", addToCart);
     app.post("/api/v1/users", saveNewUser);
 
+    //put or patch routes
+    app.patch("/api/v1/users/:id", makeAdmin);
+
     //all delete routes
     app.delete("/api/v1/cart/:id", deleteCartItem);
+    app.delete("/api/v1/users/:id", deleteUser);
   } catch (e) {
     console.log(e);
   } finally {

@@ -103,6 +103,36 @@ const getUsers = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  const query = { _id: new ObjectId(userId) };
+  try {
+    const deleted = await userCollection.deleteOne(query);
+    res.send(deleted);
+  } catch (error) {
+    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
+const makeAdmin = async (req, res) => {
+  const userId = req.params.id;
+  const data = req.body;
+  const query = { _id: new ObjectId(userId) };
+  const updatedDoc = {
+    $set: {
+      role: data.role,
+    },
+  };
+  try {
+    const admin = await userCollection.updateOne(query, updatedDoc, {});
+    res.send(admin);
+  } catch (error) {
+    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -112,4 +142,6 @@ module.exports = {
   deleteCartItem,
   saveNewUser,
   getUsers,
+  deleteUser,
+  makeAdmin,
 };
