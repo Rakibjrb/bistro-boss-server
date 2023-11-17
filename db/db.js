@@ -13,6 +13,7 @@ const client = new MongoClient(uri, {
 const menusCollection = client.db("bistroDB").collection("menus");
 const reviewsCollection = client.db("bistroDB").collection("reviews");
 const cartCollection = client.db("bistroDB").collection("cart");
+const userCollection = client.db("bistroDB").collection("users");
 
 module.exports = {
   client,
@@ -20,4 +21,5 @@ module.exports = {
   menusCollection,
   reviewsCollection,
   cartCollection,
+  userCollection,
 };

@@ -3,6 +3,7 @@ const {
   ObjectId,
   reviewsCollection,
   cartCollection,
+  userCollection,
 } = require("../db/db");
 const { errorResponse } = require("../utilities/utilities");
 
@@ -76,6 +77,32 @@ const getCartData = async (req, res) => {
   }
 };
 
+const saveNewUser = async (req, res) => {
+  const user = req.body;
+  const query = { email: user.email };
+  try {
+    const isUserExist = await userCollection.findOne(query);
+    if (isUserExist) {
+      return res.send({ success: false, message: "User already exist" });
+    }
+    const saveUser = await userCollection.insertOne(user);
+    res.send(saveUser);
+  } catch (error) {
+    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
+const getUsers = async (req, res) => {
+  try {
+    const users = await userCollection.find({}).toArray();
+    res.send(users);
+  } catch (error) {
+    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -83,4 +110,6 @@ module.exports = {
   addToCart,
   getCartData,
   deleteCartItem,
+  saveNewUser,
+  getUsers,
 };

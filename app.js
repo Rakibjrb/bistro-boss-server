@@ -8,6 +8,8 @@ const {
   addToCart,
   getCartData,
   deleteCartItem,
+  saveNewUser,
+  getUsers,
 } = require("./controllers/controllers");
 const { client } = require("./db/db");
 
@@ -28,9 +30,11 @@ const checkdb = async () => {
     app.get("/api/v1/menus/:id", getMenus);
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", getCartData);
+    app.get("/api/v1/users", getUsers);
 
     //post routes
     app.post("/api/v1/cart", addToCart);
+    app.post("/api/v1/users", saveNewUser);
 
     //all delete routes
     app.delete("/api/v1/cart/:id", deleteCartItem);
