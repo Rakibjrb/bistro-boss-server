@@ -12,14 +12,35 @@ const {
   getUsers,
   deleteUser,
   makeAdmin,
+  createAccessToken,
 } = require("./controllers/controllers");
 const { client } = require("./db/db");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //middleweres
 app.use(express.json());
 app.use(cors());
 
 app.get("/", serverMainRoute);
+
+//middlewares for token verify
+const verifyToken = (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: "forbidden access" });
+  }
+  const token = req.headers?.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).send({ message: "forbidden access" });
+  }
+  jwt.verify(token, process.env.TOKEN_SECRETE, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "forbidden access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+};
 
 const checkdb = async () => {
   try {
@@ -32,18 +53,19 @@ const checkdb = async () => {
     app.get("/api/v1/menus/:id", getMenus);
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", getCartData);
-    app.get("/api/v1/users", getUsers);
+    app.get("/api/v1/users", verifyToken, getUsers);
 
     //post routes
     app.post("/api/v1/cart", addToCart);
     app.post("/api/v1/users", saveNewUser);
+    app.post("/api/v1/access-token", createAccessToken);
 
     //put or patch routes
-    app.patch("/api/v1/users/:id", makeAdmin);
+    app.patch("/api/v1/users/:id", verifyToken, makeAdmin);
 
     //all delete routes
     app.delete("/api/v1/cart/:id", deleteCartItem);
-    app.delete("/api/v1/users/:id", deleteUser);
+    app.delete("/api/v1/users/:id", verifyToken, deleteUser);
   } catch (e) {
     console.log(e);
   } finally {

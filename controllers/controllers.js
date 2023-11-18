@@ -6,6 +6,8 @@ const {
   userCollection,
 } = require("../db/db");
 const { errorResponse } = require("../utilities/utilities");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const serverMainRoute = (req, res) => {
   res.send({
@@ -133,6 +135,19 @@ const makeAdmin = async (req, res) => {
   }
 };
 
+const createAccessToken = async (req, res) => {
+  const userInfo = req.body;
+  try {
+    const token = jwt.sign(userInfo, process.env.TOKEN_SECRETE, {
+      expiresIn: "1h",
+    });
+    res.send({ token });
+  } catch (error) {
+    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -144,4 +159,5 @@ module.exports = {
   getUsers,
   deleteUser,
   makeAdmin,
+  createAccessToken,
 };
