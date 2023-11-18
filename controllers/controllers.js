@@ -126,6 +126,16 @@ const makeAdmin = async (req, res) => {
   }
 };
 
+const addItems = async (req, res) => {
+  const data = req.body;
+  try {
+    const added = menusCollection.insertOne(data);
+    res.send(added);
+  } catch (error) {
+    res.send(errorResponse());
+  }
+};
+
 const createAccessToken = async (req, res) => {
   const userInfo = req.body;
   try {
@@ -168,4 +178,5 @@ module.exports = {
   makeAdmin,
   createAccessToken,
   checkAdmin,
+  addItems,
 };

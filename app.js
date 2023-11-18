@@ -14,6 +14,7 @@ const {
   makeAdmin,
   createAccessToken,
   checkAdmin,
+  addItems,
 } = require("./controllers/controllers");
 const { client, userCollection } = require("./db/db");
 const jwt = require("jsonwebtoken");
@@ -30,13 +31,11 @@ app.get("/", serverMainRoute);
 const verifyToken = (req, res, next) => {
   const requestToken = req.headers.authorization;
   if (!requestToken) {
-    console.log("verify 1", requestToken);
     return res.status(401).send({ message: "forbidden access" });
   }
   const token = requestToken?.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRETE, (err, decoded) => {
     if (err) {
-      console.log("verify 2");
       return res.status(401).send({ message: "forbidden access" });
     }
     req.decoded = decoded;
@@ -77,6 +76,7 @@ const checkdb = async () => {
     //admin routes
     app.get("/api/v1/users/admin/:email", verifyToken, checkAdmin);
     app.get("/api/v1/users", verifyToken, verifyAdmin, getUsers);
+    app.post("/api/v1/add-items", verifyToken, verifyAdmin, addItems);
     app.patch("/api/v1/users/:id", verifyToken, verifyAdmin, makeAdmin);
     app.delete("/api/v1/users/:id", verifyToken, verifyAdmin, deleteUser);
   } catch (e) {
