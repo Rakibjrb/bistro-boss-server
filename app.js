@@ -13,6 +13,7 @@ const {
   deleteUser,
   makeAdmin,
   createAccessToken,
+  checkAdmin,
 } = require("./controllers/controllers");
 const { client } = require("./db/db");
 const jwt = require("jsonwebtoken");
@@ -47,22 +48,19 @@ const checkdb = async () => {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
-    //server all get routes
+    //user routes
     app.get("/api/v1/menus/:id", getMenus);
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", getCartData);
-    app.get("/api/v1/users", verifyToken, getUsers);
-
-    //post routes
     app.post("/api/v1/cart", addToCart);
     app.post("/api/v1/users", saveNewUser);
     app.post("/api/v1/access-token", createAccessToken);
-
-    //put or patch routes
-    app.patch("/api/v1/users/:id", verifyToken, makeAdmin);
-
-    //all delete routes
     app.delete("/api/v1/cart/:id", deleteCartItem);
+
+    //admin routes
+    app.get("/api/v1/users/admin/:email", verifyToken, checkAdmin);
+    app.get("/api/v1/users", verifyToken, getUsers);
+    app.patch("/api/v1/users/:id", verifyToken, makeAdmin);
     app.delete("/api/v1/users/:id", verifyToken, deleteUser);
   } catch (e) {
     console.log(e);

@@ -28,7 +28,6 @@ const getMenus = async (req, res) => {
     const singleMenu = await menusCollection.findOne(options);
     res.send(singleMenu);
   } catch (e) {
-    console.log(e);
     res.send(errorResponse());
   }
 };
@@ -38,7 +37,6 @@ const getReviews = async (req, res) => {
     const reviews = await reviewsCollection.find({}).toArray();
     res.send(reviews);
   } catch (e) {
-    console.log(e);
     res.send(errorResponse());
   }
 };
@@ -49,7 +47,6 @@ const addToCart = async (req, res) => {
     const item = await cartCollection.insertOne(data);
     res.send(item);
   } catch (e) {
-    console.log(e);
     res.send(errorResponse());
   }
 };
@@ -62,7 +59,6 @@ const deleteCartItem = async (req, res) => {
     const item = await cartCollection.deleteOne(options);
     res.send(item);
   } catch (e) {
-    console.log(e);
     res.send(errorResponse());
   }
 };
@@ -74,7 +70,6 @@ const getCartData = async (req, res) => {
     const cartItems = await cartCollection.find(options).toArray();
     res.send(cartItems);
   } catch (e) {
-    console.log(e);
     res.send(errorResponse());
   }
 };
@@ -90,7 +85,6 @@ const saveNewUser = async (req, res) => {
     const saveUser = await userCollection.insertOne(user);
     res.send(saveUser);
   } catch (error) {
-    console.log(error);
     res.send(errorResponse());
   }
 };
@@ -100,7 +94,6 @@ const getUsers = async (req, res) => {
     const users = await userCollection.find({}).toArray();
     res.send(users);
   } catch (error) {
-    console.log(error);
     res.send(errorResponse());
   }
 };
@@ -112,7 +105,6 @@ const deleteUser = async (req, res) => {
     const deleted = await userCollection.deleteOne(query);
     res.send(deleted);
   } catch (error) {
-    console.log(error);
     res.send(errorResponse());
   }
 };
@@ -130,7 +122,6 @@ const makeAdmin = async (req, res) => {
     const admin = await userCollection.updateOne(query, updatedDoc, {});
     res.send(admin);
   } catch (error) {
-    console.log(error);
     res.send(errorResponse());
   }
 };
@@ -143,7 +134,23 @@ const createAccessToken = async (req, res) => {
     });
     res.send({ token });
   } catch (error) {
-    console.log(error);
+    res.send(errorResponse());
+  }
+};
+
+const checkAdmin = async (req, res) => {
+  try {
+    const reqEmail = req.params.email;
+    if (reqEmail !== req.decoded.email) {
+      return res.status(403).send({ message: "unauthorized access" });
+    }
+    const user = await userCollection.findOne({ email: reqEmail });
+    let admin = false;
+    if (user) {
+      admin = user.role === "Admin";
+      res.send(admin);
+    }
+  } catch (error) {
     res.send(errorResponse());
   }
 };
@@ -160,4 +167,5 @@ module.exports = {
   deleteUser,
   makeAdmin,
   createAccessToken,
+  checkAdmin,
 };
