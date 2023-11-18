@@ -26,13 +26,11 @@ app.get("/", serverMainRoute);
 
 //middlewares for token verify
 const verifyToken = (req, res, next) => {
-  if (!req.headers.authorization) {
+  const requestToken = req.headers.authorization;
+  if (!requestToken) {
     return res.status(401).send({ message: "forbidden access" });
   }
-  const token = req.headers?.authorization?.split(" ")[1];
-  if (!token) {
-    return res.status(401).send({ message: "forbidden access" });
-  }
+  const token = requestToken?.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRETE, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: "forbidden access" });
