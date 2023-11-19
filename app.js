@@ -15,6 +15,8 @@ const {
   createAccessToken,
   checkAdmin,
   addItems,
+  deleteItem,
+  updateMenu,
 } = require("./controllers/controllers");
 const { client, userCollection } = require("./db/db");
 const jwt = require("jsonwebtoken");
@@ -79,6 +81,8 @@ const checkdb = async () => {
     app.post("/api/v1/add-items", verifyToken, verifyAdmin, addItems);
     app.patch("/api/v1/users/:id", verifyToken, verifyAdmin, makeAdmin);
     app.delete("/api/v1/users/:id", verifyToken, verifyAdmin, deleteUser);
+    app.delete("/api/v1/delete-menu/:id", verifyToken, verifyAdmin, deleteItem);
+    app.put("/api/v1/menus/:id", verifyToken, verifyAdmin, updateMenu);
   } catch (e) {
     console.log(e);
   } finally {

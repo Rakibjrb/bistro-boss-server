@@ -165,6 +165,38 @@ const checkAdmin = async (req, res) => {
   }
 };
 
+const deleteItem = async (req, res) => {
+  const menuId = req.params.id;
+  const query = { _id: new ObjectId(menuId) };
+  try {
+    const deletedItem = await menusCollection.deleteOne(query);
+    res.send(deletedItem);
+  } catch (error) {
+    res.send(errorResponse());
+  }
+};
+
+const updateMenu = async (req, res) => {
+  const menuId = req.params.id;
+  const data = req.body;
+  const query = { _id: new ObjectId(menuId) };
+  const updatedDoc = {
+    $set: {
+      name: data.name,
+      category: data.category,
+      price: data.price,
+      recipe: data.recipe,
+      image: data.image,
+    },
+  };
+  try {
+    const updated = await menusCollection.updateOne(query, updatedDoc);
+    res.send(updated);
+  } catch (e) {
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -179,4 +211,6 @@ module.exports = {
   createAccessToken,
   checkAdmin,
   addItems,
+  deleteItem,
+  updateMenu,
 };
