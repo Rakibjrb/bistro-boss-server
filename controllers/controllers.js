@@ -214,6 +214,15 @@ const payments = async (req, res) => {
   }
 };
 
+const getPayments = async (req, res) => {
+  try {
+    const allPayments = await paymentsCollection.find({}).toArray();
+    res.send(allPayments);
+  } catch (error) {
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -231,4 +240,5 @@ module.exports = {
   deleteItem,
   updateMenu,
   payments,
+  getPayments,
 };
