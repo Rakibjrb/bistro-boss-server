@@ -215,9 +215,38 @@ const payments = async (req, res) => {
 };
 
 const getPayments = async (req, res) => {
+  const email = req.params.email;
   try {
-    const allPayments = await paymentsCollection.find({}).toArray();
+    const allPayments = await paymentsCollection.find({ email }).toArray();
     res.send(allPayments);
+  } catch (error) {
+    res.send(errorResponse());
+  }
+};
+
+const adminStats = async (req, res) => {
+  try {
+    const users = await userCollection.estimatedDocumentCount();
+    const orders = await paymentsCollection.estimatedDocumentCount();
+    const menuItems = await menusCollection.estimatedDocumentCount();
+    const result = await paymentsCollection
+      .aggregate([
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: "$price" },
+          },
+        },
+      ])
+      .toArray();
+
+    const stats = {
+      users,
+      orders,
+      menuItems,
+      revenue: result.length > 0 ? result[0].totalRevenue : 0,
+    };
+    res.send(stats);
   } catch (error) {
     res.send(errorResponse());
   }
@@ -241,4 +270,5 @@ module.exports = {
   updateMenu,
   payments,
   getPayments,
+  adminStats,
 };

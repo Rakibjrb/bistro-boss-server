@@ -19,6 +19,7 @@ const {
   updateMenu,
   payments,
   getPayments,
+  adminStats,
 } = require("./controllers/controllers");
 const { client, userCollection } = require("./db/db");
 const jwt = require("jsonwebtoken");
@@ -74,7 +75,7 @@ const checkdb = async () => {
     app.get("/api/v1/menus/:id", getMenus);
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", verifyToken, getCartData);
-    app.get("/api/v1/payments", verifyToken, getPayments);
+    app.get("/api/v1/payments/:email", verifyToken, getPayments);
     app.post("/api/v1/cart", verifyToken, addToCart);
     app.post("/api/v1/create-payment-intents", verifyToken, paymentIntents);
     app.post("/api/v1/payments", verifyToken, payments);
@@ -85,6 +86,7 @@ const checkdb = async () => {
     //admin routes
     app.get("/api/v1/users/admin/:email", verifyToken, checkAdmin);
     app.get("/api/v1/users", verifyToken, verifyAdmin, getUsers);
+    app.get("/api/v1/admin-stats", verifyToken, verifyAdmin, adminStats);
     app.post("/api/v1/add-items", verifyToken, verifyAdmin, addItems);
     app.patch("/api/v1/users/:id", verifyToken, verifyAdmin, makeAdmin);
     app.delete("/api/v1/users/:id", verifyToken, verifyAdmin, deleteUser);
