@@ -21,9 +21,11 @@ const {
 const { client, userCollection } = require("./db/db");
 const jwt = require("jsonwebtoken");
 const { errorResponse } = require("./utilities/utilities");
+const paymentIntents = require("./controllers/pyament");
 require("dotenv").config();
 
 //middleweres
+app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
 
@@ -71,6 +73,7 @@ const checkdb = async () => {
     app.get("/api/v1/reviews", getReviews);
     app.get("/api/v1/cart", verifyToken, getCartData);
     app.post("/api/v1/cart", verifyToken, addToCart);
+    app.post("/api/v1/create-payment-intents", verifyToken, paymentIntents);
     app.post("/api/v1/users", saveNewUser);
     app.post("/api/v1/access-token", createAccessToken);
     app.delete("/api/v1/cart/:id", verifyToken, deleteCartItem);
@@ -90,6 +93,4 @@ const checkdb = async () => {
   }
 };
 
-checkdb();
-
-module.exports = app;
+module.exports = { app, checkdb };
