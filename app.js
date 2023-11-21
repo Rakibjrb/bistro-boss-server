@@ -17,6 +17,7 @@ const {
   addItems,
   deleteItem,
   updateMenu,
+  payments,
 } = require("./controllers/controllers");
 const { client, userCollection } = require("./db/db");
 const jwt = require("jsonwebtoken");
@@ -74,6 +75,7 @@ const checkdb = async () => {
     app.get("/api/v1/cart", verifyToken, getCartData);
     app.post("/api/v1/cart", verifyToken, addToCart);
     app.post("/api/v1/create-payment-intents", verifyToken, paymentIntents);
+    app.post("/api/v1/payments", verifyToken, payments);
     app.post("/api/v1/users", saveNewUser);
     app.post("/api/v1/access-token", createAccessToken);
     app.delete("/api/v1/cart/:id", verifyToken, deleteCartItem);

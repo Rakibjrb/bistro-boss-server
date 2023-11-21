@@ -4,6 +4,7 @@ const {
   reviewsCollection,
   cartCollection,
   userCollection,
+  paymentsCollection,
 } = require("../db/db");
 const { errorResponse } = require("../utilities/utilities");
 const jwt = require("jsonwebtoken");
@@ -197,6 +198,22 @@ const updateMenu = async (req, res) => {
   }
 };
 
+const payments = async (req, res) => {
+  const { orderInfo } = req.body;
+  const query = {
+    _id: { $in: orderInfo.productIds.map((id) => new ObjectId(id)) },
+  };
+  try {
+    const insertPaymentInfo = await paymentsCollection.insertOne(orderInfo);
+    if (insertPaymentInfo) {
+      const deleteItemFromCart = await cartCollection.deleteMany(query);
+      res.send({ insertPaymentInfo, deleteItemFromCart });
+    }
+  } catch (error) {
+    res.send(errorResponse());
+  }
+};
+
 module.exports = {
   serverMainRoute,
   getMenus,
@@ -213,4 +230,5 @@ module.exports = {
   addItems,
   deleteItem,
   updateMenu,
+  payments,
 };

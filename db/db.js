@@ -14,6 +14,7 @@ const menusCollection = client.db("bistroDB").collection("menus");
 const reviewsCollection = client.db("bistroDB").collection("reviews");
 const cartCollection = client.db("bistroDB").collection("cart");
 const userCollection = client.db("bistroDB").collection("users");
+const paymentsCollection = client.db("bistroDB").collection("payments");
 
 module.exports = {
   client,
@@ -22,4 +23,5 @@ module.exports = {
   reviewsCollection,
   cartCollection,
   userCollection,
+  paymentsCollection,
 };
